@@ -8,11 +8,11 @@
 * scipy >= 1.16.0
 # How to run
 ## link detection
-* for enron10, dblp, fb, email: python main.py --dataset 'data name'
+* python main.py --dataset 'data name'
 
 
 ## link prediction and new link prediction
-* for enron10, dblp, fb, email: python prediction.py --dataset 'data name'
+*  python prediction.py --dataset 'data name'
 
 ## node classification
 * python train_node_class.py --dataset 'data name'
