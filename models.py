@@ -284,7 +284,6 @@ class DGMAE(nn.Module):
         if lea_feature:
             self.eps1 = nn.Parameter(torch.FloatTensor(size=(num, z_dim)).normal_())
         else:
-            # self.eps1 = nn.Parameter(torch.FloatTensor(size=(x_dim, z_dim)).normal_())
             self.eps1 = nn.Parameter(torch.FloatTensor(size=(num, z_dim)).normal_())
         self.device = torch.device(device)
         self.decoder2 = nn.Linear(z_dim+z_dim, z_dim)
@@ -357,23 +356,7 @@ class DGMAE(nn.Module):
             phi_z_t = self.phi_z(z_t)
 
             # decoder
-            if self.deconv =='innerdot':
-                dec_t = self.deccode(z_t)
-                kld_loss += self._kld_gauss(enc_mean_t, enc_std_t, prior_mean_t, prior_std_t)
-                mask_rec_loss += self.mask_rec(z_t, edge_all_list[t], edge_droped_idx_list[t])
-                # org_rec_loss += self.mask_rec(z_t, edge_all_list[t], edge_idx_list[t])
-                all_dec_t.append(z_t)
-
-            elif self.deconv in ('mlp'):
-                dec_t = self.deccode(z_t)
-                kld_loss += self._kld_gauss(enc_mean_t, enc_std_t, prior_mean_t, prior_std_t)
-                mask_rec_loss += self.mask_rec(dec_t, edge_all_list[t], edge_droped_idx_list[t])
-                # org_rec_loss += self.mask_rec(dec_t, edge_all_list[t], edge_all_list[t])
-                all_dec_t.append(dec_t)
-
-            elif self.deconv == 'GCN':
-                # 这个地方传的目的在于，为了计算全局的重构损失，就是直接计算全局的重构 pos值，mlp那个地方没有算，是所有的一块集中算的，
-                # 之前mlp效果差 是因为self.mask_rec(z_t)了，应该是dec_t, z_t是编码的embedding值，需要使用mlp解码的dec来操作
+            if self.deconv == 'GCN':
                 z_dec, pos_value = self.deccode(z_t, edge_idx_list[t], edge_all_t = edge_all_list[t] )
                 # neg_edge_index = negative_sampling(edge_all_list[t], z_t.size(0), edge_all_list[t].shape[1])
                 # neg_value = torch.sigmoid((z_dec[neg_edge_index[0]] * z_dec[neg_edge_index[1]]).sum(dim=1))
