@@ -53,7 +53,7 @@ def generate_is_subgraph(args, x, edge_list, adj_orig_dense_list, node_num):
             optimizer.step()
             loss_list.append(loss.item())
             h = hidden_st
-    edge_all_list, edge_mask_list, edge_perturb_list = [], [], []
+    edge_all_list, edge_bias_list, edge_informative_list = [], [], []
     test_h =None
 
     for tt in train_shots:
@@ -65,14 +65,14 @@ def generate_is_subgraph(args, x, edge_list, adj_orig_dense_list, node_num):
         random_edge_list_t = random_edge_list[tt]
         adj_orig_dense_list_t = adj_orig_dense_list[tt]
         model.eval()
-        hidden_st, _, _, _, _, _, all_adj_mask, all_adj_perturb = model(x,  edge_list_t, random_edge_list_t, adj_orig_dense_list_t,u,
+        hidden_st, _, _, _, _, _, all_adj_bias, all_adj_informative = model(x,  edge_list_t, random_edge_list_t, adj_orig_dense_list_t,u,
                                                                 None, test_h)
         test_h = hidden_st
-        edge_mask_index, edge_perturb_index = dense_list_to_edge(all_adj_mask, all_adj_perturb)
-        edge_mask_list.append(edge_mask_index)
-        edge_perturb_list.append(edge_perturb_index)
+        edge_bias_index, edge_informative_index = dense_list_to_edge(all_adj_bias, all_adj_informative)
+        edge_bias_list.append(edge_bias_index)
+        edge_informative_list.append(edge_informative_index)
         edge_all_list.append(torch.tensor(edge_list[tt].transpose(), dtype=torch.long))
 
-    return edge_all_list, edge_mask_list, edge_perturb_list
+    return edge_all_list, edge_bias_list, edge_informative_list
 
 
