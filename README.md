@@ -10,6 +10,7 @@ Informative Subgraphs Aware Masked Auto-Encoder in Dynamic Graphs
 
  >**This is the PyTroch implementation for International Conference on Data Mining (ICDM) 2024 Regular paper: 
 Informative Subgraphs Aware Masked Auto-Encoder in Dynamic Graphs**
+ 
 
 DyGIS is a self-supervised with masking dynamic graph representation learning method. It introduces additional constraints to ensure 
 the generated informative subgraphs guide the evolution of the dynamic graph, eliminating the effect of missing crucial information 
@@ -45,6 +46,4 @@ python prediction.py --dataset 'dataset'
 python train_node_class.py --dataset 'dataset'
 ```
 
-## node classification
-* python train_node_class.py --dataset 'data name'
 
