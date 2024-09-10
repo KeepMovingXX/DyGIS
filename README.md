@@ -24,10 +24,7 @@ due to applying a random masking strategy to the dynamic graph. The overall fram
 * pyg >= 2.3.0
 * scikit-learn >= 1.2.2
 * scipy >= 1.16.0
-* tqdm >=4.65.0
-# How to run
-## link detection
-* python main.py --dataset 'data name'
+* tqdm >= 4.65.0
 
 
 # Training & Evaluation
