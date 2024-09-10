@@ -23,7 +23,13 @@ due to applying a random masking strategy to the dynamic graph. The overall fram
 * pyg >= 2.3.0
 * scikit-learn >= 1.2.2
 * scipy >= 1.16.0
+<<<<<<< HEAD
 * tqdm >=4.65.0
+=======
+# How to run
+## link detection
+* python main.py --dataset 'data name'
+>>>>>>> d3ff1887209643b876577adff319545256c43e84
 
 
 # Training & Evaluation
@@ -33,6 +39,7 @@ python main.py --dataset 'dataset'
 ```
 
 ## link prediction and new link prediction
+<<<<<<< HEAD
 ```
 python prediction.py --dataset 'dataset'
 ```
@@ -41,3 +48,9 @@ python prediction.py --dataset 'dataset'
 ```
 python train_node_class.py --dataset 'dataset'
 ```
+=======
+* python prediction.py --dataset 'data name'
+
+## node classification
+* python train_node_class.py --dataset 'data name'
+>>>>>>> d3ff1887209643b876577adff319545256c43e84
