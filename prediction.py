@@ -51,7 +51,7 @@ args = parser.parse_args()
 
 if args.dataset == 'enron10':
     args.weight_decay_task = 1e-3
-    args.threhold = 0.05
+    args.therold = 0.05
 
 adj_time_list, adj_orig_dense_list = load_dataset(args.dataset)
 outs = mask_edges_det(adj_time_list, args.spilt_len)
