@@ -11,6 +11,7 @@ from time import time
 import logging
 import os
 
+
 seed = 3
 np.random.seed(seed)
 
@@ -22,7 +23,7 @@ parser.add_argument('--epochs_task', type=int, default=1000, help='the number of
 parser.add_argument('--lr', type=float, default=0.02, help='Initial learning rate of ISG')
 parser.add_argument('--lr_task', type=float, default=0.005, help='Initial learning rate Of DGMAE')
 parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight_decay of ISG')
-parser.add_argument('--weight_decay_task', type=float, default=1e-3, help='weight_decay of DGMAE')
+parser.add_argument('--weight_decay_task', type=float, default=0, help='weight_decay of DGMAE')
 parser.add_argument('--tau', type=float, default=0.7, help='the tempure hp')
 parser.add_argument('--therold', type=float, default=0.1, help='informative subgraph ratio')
 parser.add_argument('--h_dim', type=int, default=128, help='hidden dims of gcn ')
@@ -32,7 +33,7 @@ parser.add_argument('--u',type=bool, default=False, help=' if use u')
 parser.add_argument('--run_times', type=int, default=5, help='run times ')
 parser.add_argument('--conv_type', type=str, default='GCN', help='encoder type: GCN, GraphSAGE, GIN ')
 parser.add_argument('--decode_type', type=str, default='GCN', help='decoder type: GCN, mlp, innerdot ')
-parser.add_argument('--device', type=str, default='cuda:3', help='device')
+parser.add_argument('--device', type=str, default='cpu', help='device')
 parser.add_argument('--lea_feature', type=bool, default=False, help='x feature for different datasets')
 parser.add_argument('--lea_feature_dim', type=int, default=512, help='feature dim for different datasets')
 parser.add_argument('--model_name', type=str, default='DyGIS', help='which model while be conducted')
@@ -47,6 +48,10 @@ parser.add_argument('--patience', type=int, default=150, help='patience for earl
 parser.add_argument('--task', type=str, default='link_prediction', help='which task is conducted')
 
 args = parser.parse_args()
+
+if args.dataset == 'enron10':
+    args.weight_decay_task = 1e-3
+    args.threhold = 0.05
 
 adj_time_list, adj_orig_dense_list = load_dataset(args.dataset)
 outs = mask_edges_det(adj_time_list, args.spilt_len)
@@ -104,14 +109,14 @@ for repeat in range(args.run_times):
             print('early stopping')
             break
         optimizer.zero_grad()
-        kld_loss, _, mask_rec_loss, _, _, _, hidden_st, _ = model(x_in[args.seq_start:(seq_len - args.spilt_len)]
+        kld_loss, org_rec_loss, mask_rec_loss, _, _, _, hidden_st, _ = model(x_in[args.seq_start:(seq_len - args.spilt_len)]
                                                                          , edge_all_list[
                                                                            args.seq_start:(seq_len - args.spilt_len)]
                                                                          , edge_idx_list[
                                                                            args.seq_start:(seq_len - args.spilt_len)]
                                                                          , edge_droped_idx_list[
                                                                            args.seq_start:(seq_len - args.spilt_len)])
-        loss = kld_loss + mask_rec_loss
+        loss = kld_loss + mask_rec_loss + org_rec_loss
         loss.backward()
         optimizer.step()
         nn.utils.clip_grad_norm_(model.parameters(), args.clip)
